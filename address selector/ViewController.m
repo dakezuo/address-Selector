@@ -61,6 +61,12 @@
         self.picker = [[UIPickerView alloc] initWithFrame:CGRectMake(0, toolBarHeight, _pickerBG.frame.size.width, _pickerBG.frame.size.height - toolBarHeight)];
         self.picker.dataSource = self;
         self.picker.delegate = self;
+        NSInteger rowProvince = 0;
+        NSString *provincesKey = self.provinces[rowProvince];
+        [self refrshOfCitysWithProvincsKey:provincesKey];
+        NSInteger rowCity = 0;
+        NSString *citysKey = self.citys[rowCity];
+        [self refrshOfDistrictsWithProvincsKey:provincesKey CitysKey:citysKey];
         [_pickerBG addSubview:self.picker];
     }
     return _pickerBG;
@@ -189,6 +195,8 @@
     // Do any additional setup after loading the view, typically from a nib.
     [self.view addSubview:self.button];
     [self.view addSubview:self.label];
+    
+    
 }
 //选择地区
 - (void)chooseArea:(UIButton *)sender {
@@ -254,9 +262,9 @@
     if (component == 0) {
         return self.provinces.count;
     }else if (component == 1) {
-        NSInteger rowProvince = [pickerView selectedRowInComponent:0];
-        NSString *provincesKey = self.provinces[rowProvince];
-        [self refrshOfCitysWithProvincsKey:provincesKey];
+//        NSInteger rowProvince = [pickerView selectedRowInComponent:0];
+//        NSString *provincesKey = self.provinces[rowProvince];
+//        [self refrshOfCitysWithProvincsKey:provincesKey];
         if ([self.citys count] <= 0) {
             return 1;
         } else {
@@ -264,12 +272,12 @@
         }
         
     } else {
-        NSInteger rowProvince = [pickerView selectedRowInComponent:0];
-        NSString *provincesKey = self.provinces[rowProvince];
-        [self refrshOfCitysWithProvincsKey:provincesKey];
-        NSInteger rowCity = [pickerView selectedRowInComponent:1];
-        NSString *citysKey = self.citys[rowCity];
-        [self refrshOfDistrictsWithProvincsKey:provincesKey CitysKey:citysKey];
+//        NSInteger rowProvince = [pickerView selectedRowInComponent:0];
+//        NSString *provincesKey = self.provinces[rowProvince];
+//        [self refrshOfCitysWithProvincsKey:provincesKey];
+//        NSInteger rowCity = [pickerView selectedRowInComponent:1];
+//        NSString *citysKey = self.citys[rowCity];
+//        [self refrshOfDistrictsWithProvincsKey:provincesKey CitysKey:citysKey];
         if ([self.districts count] <= 0) {
             return 1;
         } else {
@@ -340,23 +348,32 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     if (component == 0) {
+        [pickerView selectRow:0 inComponent:1 animated:NO];
+        [pickerView selectRow:0 inComponent:2 animated:NO];
+        NSInteger rowProvince = [pickerView selectedRowInComponent:0];
+        NSString *provincesKey = self.provinces[rowProvince];
+        [self refrshOfCitysWithProvincsKey:provincesKey];
+//        [pickerView reloadComponent:1];
+        NSInteger rowCity = [pickerView selectedRowInComponent:1];
+        NSString *citysKey = self.citys[rowCity];
+        [self refrshOfDistrictsWithProvincsKey:provincesKey CitysKey:citysKey];
+//        [pickerView selectRow:0 inComponent:2 animated:NO];
         [pickerView reloadComponent:1];
         [pickerView reloadComponent:2];
     }
     if (component == 1) {
+        [pickerView selectRow:0 inComponent:2 animated:NO];
+        NSInteger rowProvince = [pickerView selectedRowInComponent:0];
+        NSString *provincesKey = self.provinces[rowProvince];
+        [self refrshOfCitysWithProvincsKey:provincesKey];
+        NSInteger rowCity = [pickerView selectedRowInComponent:1];
+        NSString *citysKey = self.citys[rowCity];
+        [self refrshOfDistrictsWithProvincsKey:provincesKey CitysKey:citysKey];
         [pickerView reloadComponent:2];
     }
-    NSInteger rowProvince = [pickerView selectedRowInComponent:0];
-    NSString *provincesKey = self.provinces[rowProvince];
-    [self refrshOfCitysWithProvincsKey:provincesKey];
-    NSInteger rowCity = [pickerView selectedRowInComponent:1];
-    NSString *citysKey = self.citys[rowCity];
-    [self refrshOfDistrictsWithProvincsKey:provincesKey CitysKey:citysKey];
-    NSInteger rowDistricts = [pickerView selectedRowInComponent:2];
-    NSString *districtsKey = self.districts[rowDistricts];
-    self.provinceTitle = provincesKey;
-    self.cityTitle = citysKey;
-    self.districtsTitle = districtsKey;
+    self.provinceTitle = self.provinces[[pickerView selectedRowInComponent:0]];
+    self.cityTitle = self.citys[[pickerView selectedRowInComponent:1]];
+    self.districtsTitle = self.districts[[pickerView selectedRowInComponent:2]];
 }
 
 
